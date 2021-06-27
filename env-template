@@ -1,0 +1,8 @@
+### API Token
+CALENDAR_TOKEN=secret-token
+
+### CALENDAR URL
+CALENDAR_URL=https://link-to-my-calendar.ics
+
+### Timezone
+CALENDAR_TIMEZONE=America/Detroit
