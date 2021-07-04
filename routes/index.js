@@ -31,13 +31,6 @@ var files = jetpack.find('./calendars', { matching: ['*.ics'] }) || [];
 var calendarchecksums = {};
 var calendars = {};
 
-for(var c in files){
-  calendarchecksums[ files[c] ] = null;
-  calendars[ files[c] ] = null;
-  if( !jetpack.exists(files[c]) )
-    jetpack.write( files[c], "" );
-}
-
 /* GET users listing. */
 router.get('/', function (req, res, next) {
 
@@ -57,6 +50,30 @@ router.get('/', function (req, res, next) {
     resetCache = true;
     useCache = false;
     console.log('Cache outdated');
+  }
+
+  var files = jetpack.find('./calendars', { matching: ['*.ics'] }) || [];
+  
+  // Match the current calendar files
+  for(var c in files){
+    // Add file if it doesn't exist
+    if(calendars[ files[c] ] === undefined ){
+      calendars[ files[c] ] = null;
+      calendarchecksums[ files[c] ] = null;
+    }
+  }
+  // Remove old files
+  for( c in calendars){
+    if( !jetpack.exists(c) ){
+      delete calendars[c];
+      resetCache = true;
+    }
+  }
+  for( c in calendarchecksums){
+    if( !jetpack.exists(c) ){
+      delete calendarchecksums[c];
+      resetCache = true;
+    }
   }
 
   var merged = {};
